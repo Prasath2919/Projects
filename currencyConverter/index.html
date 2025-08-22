@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+
+<head>
+    <title>Title of the App</title>
+    <meta name="author" content="Hari Prasad" />
+    <meta name="description" content="Practice Widget" />
+    <link rel="stylesheet" type="text/css" href="https://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css" />
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="https://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
+</head>
+
+<body>
+
+    <!-- <script data-main="script/require-config" src="lib/require.js"></script> -->
+    <!-- <script  src="script/app.js"></script>
+    <script  src="script/main.js"></script> -->
+    <!-- <script src="lib/require.js"></script> -->
+    <!-- <script src="	https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.7/require.js"></script> -->
+    <script>
+        define("CustomMask", [], function () {
+            function mask(targetElement) {
+                try {
+                    if (!(targetElement instanceof HTMLElement)) return;
+
+                    if (targetElement.querySelector(".custom-mask-overlay")) return;
+
+                    const overlay = document.createElement("div");
+                    overlay.className = "custom-mask-overlay";
+
+                    const loaderWrapper = document.createElement("div");
+                    loaderWrapper.className = "custom-loader-wrapper";
+
+                    // const loaderImg = document.createElement("img");
+                    // loaderImg.src = "images/zoox.jpg";
+                    // loaderImg.alt = "Loading...";
+                    // loaderImg.className = "custom-loader-img";
+
+                    overlay.appendChild(loaderWrapper);
+                    // overlay.appendChild(loaderImg);
+
+                    const computedStyle = getComputedStyle(targetElement);
+                    if (computedStyle.position === "static") {
+                        targetElement.style.position = "relative";
+                    }
+
+                    if (targetElement.style.display === "none") {
+                        targetElement.style.display = "block";
+                    }
+
+
+                    [...targetElement.children].forEach(child => {
+                        if (child !== overlay) {
+                            child.style.opacity = "0.3";
+                            child.style.pointerEvents = "none";
+                        }
+                    });
+
+                    targetElement.appendChild(overlay);
+                } catch (error) {
+                    console.error("Masking failed:", error);
+                }
+            }
+
+            function unmask(targetElement) {
+                try {
+                    if (!(targetElement instanceof HTMLElement)) return;
+
+                    const overlay = targetElement.querySelector(".custom-mask-overlay");
+                    if (overlay) {
+                        overlay.remove();
+                        [...targetElement.children].forEach(child => {
+                            child.style.opacity = "1";
+                            child.style.pointerEvents = "auto";
+                        });
+                    }
+                } catch (error) {
+                    console.error("Unmasking failed:", error);
+                }
+            }
+
+            return {
+                mask,
+                unmask
+            };
+        });
+        define("currency", ["CustomMask"], function (CustomMask) {
+            function createWidget() {
+                const Main_container = UWA.createElement("div", {
+                    id: "main-container",
+                    class: "main-class",
+                    styles: {
+                        padding: "20px",
+                        width: "240px",
+                        maxHeight: "280px",
+                        margin: "10px 0 10px 58px",
+                        borderRadius: "5px",
+                        background: "white",
+                        // border: "1px solid black",
+                        boxShadow: "5px 5px 10px grey"
+                    }
+                });
+
+                const currencyTitle = UWA.createElement("h1", {
+                    id: "currencyTitle",
+                    html: "Currency Converter",
+                    styles: {
+                        // fontSize: "10px",
+                        margin: "0",
+                        color: "#5C5CFF",
+                        textAlign: "center",
+                        fontWeight: "600"
+                    }
+
+
+                })
+                const InputWrapper = UWA.createElement("div", { id: "Input-wrapper", styles: { display: "flex", flexDirection: "column" } })
+                const labelAmount = UWA.createElement("label", { id: "labelAmount", html: "Enter Amount", styles: { display: "inline-block", paddingTop: "10px", fontSize: "14px", fontWeight: "500" } })
+                const InputAmount = UWA.createElement("input", {
+                    id: "InputAmount", html: "Enter Amount",
+                    styles: { marginTop: "10px", fontSize: "14px", height: "25px", borderRadius: "5px", border: "1px solid black" },
+                    events: {
+                        mouseenter: function () {
+                            this.setStyle("boxShadow", "0 0 5px #5C5CFF")
+                        },
+                        mouseleave: function () {
+                            this.setStyle("boxShadow", "none")
+                        }
+                    }
+                })
+                const errorInput = UWA.createElement("p", { id: "error-input", styles: { color: "red" } })
+
+                const selectCountry = UWA.createElement("div", { id: "seleceCountry", styles: { display: "flex", marginTop: "12px", justifyContent: "space-between" } })
+                const fromWrapper = UWA.createElement("div", { id: "form-Wrapper", styles: { display: "flex", flexDirection: "column" } })
+                function getCurrency() {
+                    const currencies = [
+                        "INR", "AFN", "ALL", "AMD", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BND", "BOB", "BRL", "BSD",
+                        "BTN", "BWP", "BYN", "BZD", "CAD", "CHF", "CLP", "CNY", "COP", "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP",
+                        "ERN", "ETB", "EUR", "FJD", "FKP", "GEL", "GHS", "GIP", "GMD", "GNF", "GTQ", "HKD", "HNL", "HRK", "HUF", "IDR", "ILS", "AED",
+                        "IQD", "IRR", "ISK", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD",
+                        "LSL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRU", "MUR", "MVR", "MWK", "MXN", "MYR", "MZN", "NAD", "NGN",
+                        "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF", "SAR",
+                        "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLL", "SOS", "SRD", "STN", "SVC", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY",
+                        "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VES", "VND", "VUV", "WST", "XAF", "XCD", "XOF", "XPF", "YER", "ZAR",
+                        "ZMW", "ZWL"
+                    ];
+                    return currencies;
+
+                }
+
+                const currencies = getCurrency()
+                const fromLabel = UWA.createElement("label", { html: "From:", for: "from", styles: { fontSize: "12px", fontWeight: "500" } });
+                const fromSelect = UWA.createElement("select", { id: "from" });
+                currencies.forEach(code => {
+                    console.log(`Adding currency option:${code}`);
+                    
+                    // const opt = UWA.createElement("option", { html: code });
+                    fromSelect.addContent(UWA.createElement("option", { html: code }));
+                });
+
+                const transferImg = UWA.createElement("img", {
+                    id: "transferImg",
+                    src: "images/transfer.png",
+                    alt: "weather",
+                    class: "weather-icon",
+                    styles: {
+                        height: "20px",
+                        width: "20px",
+                        transition: "transform 0.3s ease",
+                        // alignItems: "center",
+                        marginTop: "12px"
+                    }
+                })
+                const toWrapper = UWA.createElement("div", { id: "to-Wrapper", styles: { display: "flex", flexDirection: "column" } })
+
+                const toLabel = UWA.createElement("label", { html: "To:", for: "to", styles: { fontSize: "12px", fontWeight: "500" } });
+                const toselect = UWA.createElement("select", { id: "to" });
+                currencies.forEach(code => (
+                    console.log(`Adding 'to' currency option: ${code}`),
+                    toselect.addContent(UWA.createElement("option", { html: code }))
+                ));
+
+
+
+                //Button
+                const buttonWrapper = UWA.createElement("div", { id: "button-Wrapper" })
+                const convertBtn = UWA.createElement("button", {
+                    id: "convert-btn", html: "Convert", styles: {
+                        width: "100%",
+                        height: "35px",
+                        color: "white",
+                        backgroundColor: "#5C5CFF",
+                        borderRadius: "5px",
+                        border: "none",
+                        fontSize: "14px",
+                        marginTop: "12px",
+                        transition: "transform 0.3s ease"
+                    },
+                    events: {
+                        mouseenter: function () {
+                            this.setStyle("transform", "scale(1.05)")
+                        },
+                        mouseleave: function () {
+                            this.setStyle("transform", "scale(1)")
+                        }
+                    }
+                })
+                const result = UWA.createElement("p", { id: "result", styles: { marginTop: "12px", textAlign: "center", fontSize: "16px" } })
+                const exchangeRate = UWA.createElement("p", { id: "exchange-rate", styles: { marginTop: "8px", textAlign: "center", fontSize: "14px" } })
+
+
+                convertBtn.addEvent("click", () => {
+                    const fromValue = document.getElementById("from").value;
+                    const toValue = document.getElementById("to").value;
+                    const inputElement = document.getElementById("InputAmount");
+                    // const inputValue = parseFloat(inputElement.value);
+                    const inputValue = document.getElementById("InputAmount").value
+
+                    console.log("From:", fromValue, "To:", toValue, "Input value:", inputValue);
+
+
+
+                    // Reset previous error states
+                    errorInput.setText("");
+                    InputAmount.setStyle("border", "");
+
+                    // Validation
+                    !inputElement.value.trim() ? (
+                        errorInput.setText("Please enter a value."),
+                        InputAmount.setStyle("border", "2px solid red"),
+                        void 0
+                    ) : isNaN(inputValue) ? (
+                        errorInput.setText("Please enter numbers only (no letters or symbols)"),
+                        InputAmount.setStyle("border", "2px solid red"),
+                        void 0
+                    ) : (
+                       
+                        console.log("Validation passed, starting conversion"),
+                        CustomMask.mask(Main_container),
+                        setTimeout(() => (
+                            console.log("Fetching exchange rate..."),
+                            fetch(`https://v6.exchangerate-api.com/v6/7e766de5e977050bd06e4c1c/latest/${fromValue}`)
+                                .then(res => (
+                                    console.log("Response received"),
+                                    res.json()
+                                ))
+                                .then(data => {
+                                    console.log("Data parsed:", data);
+
+                                    const rate = data.conversion_rates[toValue];
+                                    console.log(`Rate for ${toValue}: ${rate}`);
+
+                                    return !rate ? (
+                                        errorInput.setText(`Conversion rate not available for ${toValue}`),
+                                        CustomMask.unmask(Main_container),
+                                        
+                                        void 0
+                                    ) : (
+                                        
+                                        console.log("Conversion successful"),
+                                        (() => {
+                                            const convertedAmount = inputValue * rate;
+                                            return (
+                                                exchangeRate.setText(`1 ${fromValue} = ${rate} ${toValue}`),
+                                                result.setText(`${inputValue} ${fromValue} = ${convertedAmount.toFixed(2)} ${toValue}`),
+                                                inputElement.value = "",
+                                                CustomMask.unmask(Main_container),
+                                                console.log("Conversion completed successfully")
+                                            );
+                                        })()
+                                    );
+                                })
+                                .catch(err => (
+                                    console.error("Error fetching conversion rate:", err),
+                                    errorInput.setText("Failed to fetch conversion rate."),
+                                    CustomMask.unmask(Main_container)
+                                ))
+                        ), 0)
+                    );
+
+                });
+
+                InputAmount.addEvent("change", () => {
+                    const inputElement = document.getElementById("InputAmount");
+                    const inputValue = inputElement.value;
+
+                    // Reset error state when user starts typing
+                    errorInput.setText("");
+
+                    if (inputValue && isNaN(parseFloat(inputValue))) {
+                        errorInput.setText("Please enter numbers only (no letters or symbols)");
+                        InputAmount.setStyle("border", "2px solid red");
+                    } else {
+                        InputAmount.setStyle("border", ""); // Reset border
+                    }
+                });
+
+
+
+
+
+
+
+
+                // const data = fetch("https://api.frankfurter.app/latest?from=INR&to=USD")
+                // currencies.forEach(element => {
+                //     fetch(`https://api.frankfurter.dev/v1/latest?base=${element}`)
+                //         .then((res) => res.json())
+                //         .then((data) => {
+                //             console.log(data);
+                //         })
+                // });
+
+                InputWrapper.addContent([labelAmount, InputAmount, errorInput])
+                fromWrapper.addContent([fromLabel, fromSelect])
+                toWrapper.addContent([toLabel, toselect])
+                selectCountry.addContent([fromWrapper, transferImg, toWrapper])
+                buttonWrapper.addContent([convertBtn, exchangeRate, result])
+                Main_container.addContent([currencyTitle, InputWrapper, selectCountry, buttonWrapper])
+
+
+                return Main_container
+            }
+            return {
+                createWidget
+            }
+        });
+        widget.onRefresh = function () { alert("Hello") }
+        widget.onLoad = function () {
+
+            require(["currency"], function (currency) {
+                const currencyWidget = currency.createWidget();
+                currencyWidget.inject(widget.body);
+            })
+        }
+
+    </script>
+
+
+</body>
+
+</html>

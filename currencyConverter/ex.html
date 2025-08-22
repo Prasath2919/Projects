@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter Widgets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .widget {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .widget-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* Widget 1 - Modern Minimal */
+        .widget-1 {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .widget-1 .widget-title {
+            color: white;
+        }
+
+        .currency-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .currency-select {
+            background: transparent;
+            border: none;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .amount-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            text-align: right;
+        }
+
+        .amount-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .swap-btn {
+            align-self: center;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 10px auto;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .swap-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Widget 2 - Classic Blue */
+        .widget-2 {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .widget-2 .currency-input {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .widget-2 .currency-select,
+        .widget-2 .amount-input {
+            color: #333;
+        }
+
+        .widget-2 .amount-input::placeholder {
+            color: #666;
+        }
+
+        /* Widget 3 - Dark Theme */
+        .widget-3 {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+        }
+
+        .widget-3 .currency-input {
+            background: #34495e;
+            border: 1px solid #5d6d7e;
+        }
+
+        .widget-3 .currency-select,
+        .widget-3 .amount-input {
+            color: #ecf0f1;
+        }
+
+        /* Widget 4 - Green Financial */
+        .widget-4 {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            color: white;
+        }
+
+        .rate-display {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .convert-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Widget 5 - Purple Gradient */
+        .widget-5 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .flag-icon {
+            width: 24px;
+            height: 18px;
+            background: #ddd;
+            border-radius: 3px;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .flag-usd { background: linear-gradient(to right, #ff0000, #ffffff, #0000ff); }
+        .flag-eur { background: linear-gradient(to right, #003399, #ffcc00); }
+        .flag-gbp { background: linear-gradient(to right, #ff0000, #ffffff, #000080); }
+        .flag-jpy { background: radial-gradient(circle, #ff0000 30%, #ffffff 30%); }
+
+        /* Widget 6 - Compact Card */
+        .widget-6 {
+            background: white;
+            border: 2px solid #e0e6ed;
+            padding: 20px;
+        }
+
+        .widget-6 .currency-input {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+
+        .widget-6 .currency-select,
+        .widget-6 .amount-input {
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Currency Converter Widgets</h1>
+        <p>Multiple design variations for currency conversion</p>
+    </div>
+
+    <div class="container">
+        <!-- Widget 1 - Modern Red -->
+        <div class="widget widget-1">
+            <h3 class="widget-title">Quick Convert</h3>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>USD</option>
+                    <option>EUR</option>
+                    <option>GBP</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="100.00">
+            </div>
+            <button class="swap-btn">⇅</button>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>EUR</option>
+                    <option>USD</option>
+                    <option>GBP</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="85.30">
+            </div>
+        </div>
+
+        <!-- Widget 2 - Classic Blue -->
+        <div class="widget widget-2">
+            <h3 class="widget-title">Currency Exchange</h3>
+            <div class="currency-input">
+                <span class="flag-icon flag-usd"></span>
+                <select class="currency-select">
+                    <option>USD</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="1,000.00">
+            </div>
+            <button class="swap-btn">↕</button>
+            <div class="currency-input">
+                <span class="flag-icon flag-eur"></span>
+                <select class="currency-select">
+                    <option>EUR</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="853.20">
+            </div>
+            <div class="rate-display">
+                1 USD = 0.8532 EUR
+            </div>
+        </div>
+
+        <!-- Widget 3 - Dark Theme -->
+        <div class="widget widget-3">
+            <h3 class="widget-title">Pro Converter</h3>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>GBP £</option>
+                    <option>USD $</option>
+                    <option>EUR €</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="500.00">
+            </div>
+            <button class="swap-btn">🔄</button>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>JPY ¥</option>
+                    <option>USD $</option>
+                    <option>EUR €</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="94,500">
+            </div>
+            <button class="convert-btn">Convert Now</button>
+        </div>
+
+        <!-- Widget 4 - Green Financial -->
+        <div class="widget widget-4">
+            <h3 class="widget-title">Live Rates</h3>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>USD</option>
+                    <option>EUR</option>
+                    <option>GBP</option>
+                    <option>JPY</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="250.00">
+            </div>
+            <div class="rate-display">
+                Real-time rate: 1.2750
+            </div>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>CAD</option>
+                    <option>USD</option>
+                    <option>EUR</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="318.75">
+            </div>
+            <button class="convert-btn">Get Latest Rate</button>
+        </div>
+
+        <!-- Widget 5 - Purple Gradient -->
+        <div class="widget widget-5">
+            <h3 class="widget-title">Smart Exchange</h3>
+            <div class="currency-input">
+                <span class="flag-icon flag-eur"></span>
+                <select class="currency-select">
+                    <option>EUR</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="1,500">
+            </div>
+            <button class="swap-btn">⇄</button>
+            <div class="currency-input">
+                <span class="flag-icon flag-usd"></span>
+                <select class="currency-select">
+                    <option>USD</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="1,758">
+            </div>
+            <div class="rate-display">
+                Updated: 2 minutes ago
+            </div>
+        </div>
+
+        <!-- Widget 6 - Clean White -->
+        <div class="widget widget-6">
+            <h3 class="widget-title">Simple Converter</h3>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>AUD</option>
+                    <option>USD</option>
+                    <option>EUR</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="750.00">
+            </div>
+            <button class="swap-btn" style="color: #667eea;">⟷</button>
+            <div class="currency-input">
+                <select class="currency-select">
+                    <option>USD</option>
+                    <option>EUR</option>
+                    <option>GBP</option>
+                </select>
+                <input type="number" class="amount-input" placeholder="487.50">
+            </div>
+            <button class="convert-btn" style="background: #667eea; color: white; border: none;">Calculate</button>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity
+        document.querySelectorAll('.swap-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const widget = this.closest('.widget');
+                const inputs = widget.querySelectorAll('.currency-input');
+                if (inputs.length >= 2) {
+                    const firstSelect = inputs[0].querySelector('.currency-select');
+                    const firstInput = inputs[0].querySelector('.amount-input');
+                    const secondSelect = inputs[1].querySelector('.currency-select');
+                    const secondInput = inputs[1].querySelector('.amount-input');
+                    
+                    // Swap values
+                    const tempSelectValue = firstSelect.value;
+                    const tempInputValue = firstInput.value;
+                    
+                    firstSelect.value = secondSelect.value;
+                    firstInput.value = secondInput.value;
+                    secondSelect.value = tempSelectValue;
+                    secondInput.value = tempInputValue;
+                }
+                
+                // Add rotation animation
+                this.style.transform = 'rotate(180deg)';
+                setTimeout(() => {
+                    this.style.transform = 'rotate(0deg)';
+                }, 300);
+            });
+        });
+
+        // Add hover effects for convert buttons
+        document.querySelectorAll('.convert-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.textContent;
+                this.textContent = 'Converting...';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

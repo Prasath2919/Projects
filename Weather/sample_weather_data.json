@@ -1,0 +1,272 @@
+[
+  {
+    "country": "USA",
+    "city": "New York",
+    "temperature": 45,
+    "condition": "Sunny",
+    "humidity": "63%",
+    "windSpeed": "15.0 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "UK",
+    "city": "London",
+    "temperature": 15,
+    "condition": "Mist",
+    "humidity": "40%",
+    "windSpeed": "8.3 Km/h",
+    "icon": "images/mist.png"
+  },
+  {
+    "country": "India",
+    "city": "Mumbai",
+    "temperature": 42,
+    "condition": "Mist",
+    "humidity": "80%",
+    "windSpeed": "7.2 Km/h",
+    "icon": "images/mist.png"
+  },
+  {
+    "country": "Germany",
+    "city": "Berlin",
+    "temperature": 9,
+    "condition": "Drizzle",
+    "humidity": "68%",
+    "windSpeed": "7.5 Km/h",
+    "icon": "images/drizzle.png"
+  },
+  {
+    "country": "France",
+    "city": "Paris",
+    "temperature": 23,
+    "condition": "Sunny",
+    "humidity": "16%",
+    "windSpeed": "5.5 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "Japan",
+    "city": "Tokyo",
+    "temperature": 16,
+    "condition": "Snow",
+    "humidity": "63%",
+    "windSpeed": "14.4 Km/h",
+    "icon": "images/snow.png"
+  },
+  {
+    "country": "China",
+    "city": "Beijing",
+    "temperature": 36,
+    "condition": "Sunny",
+    "humidity": "60%",
+    "windSpeed": "10.6 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "Russia",
+    "city": "Moscow",
+    "temperature": 25,
+    "condition": "Snow",
+    "humidity": "28%",
+    "windSpeed": "8.1 Km/h",
+    "icon": "images/snow.png"
+  },
+  {
+    "country": "Brazil",
+    "city": "Rio de Janeiro",
+    "temperature": 30,
+    "condition": "Sunny",
+    "humidity": "15%",
+    "windSpeed": "4.8 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "Canada",
+    "city": "Toronto",
+    "temperature": 27,
+    "condition": "Sunny",
+    "humidity": "64%",
+    "windSpeed": "4.8 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "Australia",
+    "city": "Sydney",
+    "temperature": -1,
+    "condition": "Clouds",
+    "humidity": "51%",
+    "windSpeed": "14.9 Km/h",
+    "icon": "images/clouds.png"
+  },
+  {
+    "country": "Italy",
+    "city": "Rome",
+    "temperature": 17,
+    "condition": "Drizzle",
+    "humidity": "69%",
+    "windSpeed": "3.5 Km/h",
+    "icon": "images/drizzle.png"
+  },
+  {
+    "country": "Spain",
+    "city": "Madrid",
+    "temperature": -4,
+    "condition": "Clouds",
+    "humidity": "73%",
+    "windSpeed": "7.4 Km/h",
+    "icon": "images/clouds.png"
+  },
+  {
+    "country": "Egypt",
+    "city": "Cairo",
+    "temperature": 19,
+    "condition": "Rain",
+    "humidity": "25%",
+    "windSpeed": "3.6 Km/h",
+    "icon": "images/rain.png"
+  },
+  {
+    "country": "South Africa",
+    "city": "Cape Town",
+    "temperature": 27,
+    "condition": "Clouds",
+    "humidity": "11%",
+    "windSpeed": "13.4 Km/h",
+    "icon": "images/clouds.png"
+  },
+  {
+    "country": "Argentina",
+    "city": "Buenos Aires",
+    "temperature": 45,
+    "condition": "Drizzle",
+    "humidity": "27%",
+    "windSpeed": "7.1 Km/h",
+    "icon": "images/drizzle.png"
+  },
+  {
+    "country": "Mexico",
+    "city": "Mexico City",
+    "temperature": 35,
+    "condition": "Sunny",
+    "humidity": "12%",
+    "windSpeed": "5.8 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "South Korea",
+    "city": "Seoul",
+    "temperature": 38,
+    "condition": "Sunny",
+    "humidity": "13%",
+    "windSpeed": "3.0 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "Thailand",
+    "city": "Bangkok",
+    "temperature": 33,
+    "condition": "Clouds",
+    "humidity": "26%",
+    "windSpeed": "8.1 Km/h",
+    "icon": "images/clouds.png"
+  },
+  {
+    "country": "UAE",
+    "city": "Dubai",
+    "temperature": 15,
+    "condition": "Sunny",
+    "humidity": "63%",
+    "windSpeed": "1.6 Km/h",
+    "icon": "images/sun.png"
+  },
+  {
+    "country": "Turkey",
+    "city": "Istanbul",
+    "temperature": 19,
+    "condition": "Rain",
+    "humidity": "22%",
+    "windSpeed": "1.9 Km/h",
+    "icon": "images/rain.png"
+  },
+  {
+    "country": "Indonesia",
+    "city": "Jakarta",
+    "temperature": -2,
+    "condition": "Mist",
+    "humidity": "72%",
+    "windSpeed": "2.2 Km/h",
+    "icon": "images/mist.png"
+  },
+  {
+    "country": "Netherlands",
+    "city": "Amsterdam",
+    "temperature": 37,
+    "condition": "Clouds",
+    "humidity": "47%",
+    "windSpeed": "3.3 Km/h",
+    "icon": "images/clouds.png"
+  },
+  {
+    "country": "Sweden",
+    "city": "Stockholm",
+    "temperature": 40,
+    "condition": "Mist",
+    "humidity": "59%",
+    "windSpeed": "4.7 Km/h",
+    "icon": "images/mist.png"
+  },
+  {
+    "country": "Norway",
+    "city": "Oslo",
+    "temperature": 24,
+    "condition": "Snow",
+    "humidity": "78%",
+    "windSpeed": "14.5 Km/h",
+    "icon": "images/snow.png"
+  },
+  {
+    "country": "Denmark",
+    "city": "Copenhagen",
+    "temperature": 21,
+    "condition": "Snow",
+    "humidity": "34%",
+    "windSpeed": "9.2 Km/h",
+    "icon": "images/snow.png"
+  },
+  {
+    "country": "Malaysia",
+    "city": "Kuala Lumpur",
+    "temperature": 19,
+    "condition": "Mist",
+    "humidity": "19%",
+    "windSpeed": "11.7 Km/h",
+    "icon": "images/mist.png"
+  },
+  {
+    "country": "Vietnam",
+    "city": "Hanoi",
+    "temperature": 39,
+    "condition": "Drizzle",
+    "humidity": "59%",
+    "windSpeed": "12.7 Km/h",
+    "icon": "images/drizzle.png"
+  },
+  {
+    "country": "Philippines",
+    "city": "Manila",
+    "temperature": 25,
+    "condition": "Mist",
+    "humidity": "63%",
+    "windSpeed": "10.6 Km/h",
+    "icon": "images/mist.png"
+  },
+  {
+    "country": "Pakistan",
+    "city": "Karachi",
+    "temperature": -4,
+    "condition": "Snow",
+    "humidity": "49%",
+    "windSpeed": "5.9 Km/h",
+    "icon": "images/snow.png"
+  }
+]
