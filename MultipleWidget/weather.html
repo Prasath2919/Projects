@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+
+<head>
+    <title>Title of the App</title>
+    <meta name="author" content="Hari Prasad" />
+    <meta name="description" content="Practice Widget" />
+    <link rel="stylesheet" type="text/css" href="https://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css" />
+    <link rel="stylesheet" href="styles/icon/css/all.min.css">
+    <link rel="stylesheet" href="styles/icon/style.css">
+    <script src="https://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
+</head>
+
+<body>
+
+    <!-- <script data-main="script/require-config" src="lib/require.js"></script> -->
+    <!-- <script  src="script/app.js"></script>
+    <script  src="script/main.js"></script> -->
+    <!-- <script src="lib/require.js"></script> -->
+    <script src="	https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.7/require.js"></script>
+    <script>
+        define("CustomMask", [], function () {
+            function mask(targetElement) {
+                try {
+                    if (!(targetElement instanceof HTMLElement)) return;
+
+                    if (targetElement.querySelector(".custom-mask-overlay")) return;
+
+                    const overlay = document.createElement("div");
+                    overlay.className = "custom-mask-overlay";
+
+                    const loaderWrapper = document.createElement("div");
+                    loaderWrapper.className = "custom-loader-wrapper";
+
+                    // const loaderImg = document.createElement("img");
+                    // loaderImg.src = "images/zoox.jpg";
+                    // loaderImg.alt = "Loading...";
+                    // loaderImg.className = "custom-loader-img";
+
+                    overlay.appendChild(loaderWrapper);
+                    // overlay.appendChild(loaderImg);
+
+                    const computedStyle = getComputedStyle(targetElement);
+                    if (computedStyle.position === "static") {
+                        targetElement.style.position = "relative";
+                    }
+
+                    if (targetElement.style.display === "none") {
+                        targetElement.style.display = "block";
+                    }
+
+
+                    [...targetElement.children].forEach(child => {
+                        if (child !== overlay) {
+                            child.style.opacity = "0.3";
+                            child.style.pointerEvents = "none";
+                        }
+                    });
+
+                    targetElement.appendChild(overlay);
+                } catch (error) {
+                    console.error("Masking failed:", error);
+                }
+            }
+
+            function unmask(targetElement) {
+                try {
+                    if (!(targetElement instanceof HTMLElement)) return;
+
+                    const overlay = targetElement.querySelector(".custom-mask-overlay");
+                    if (overlay) {
+                        overlay.remove();
+                        [...targetElement.children].forEach(child => {
+                            child.style.opacity = "1";
+                            child.style.pointerEvents = "auto";
+                        });
+                    }
+                } catch (error) {
+                    console.error("Unmasking failed:", error);
+                }
+            }
+
+            return {
+                mask,
+                unmask
+            };
+        });
+        define("weather", ["CustomMask"], function (CustomMask) {
+            function createWidget() {
+
+                const Main_container = UWA.createElement("div", {
+                    id: "main-container",
+                    class: "main-class",
+                    styles: {
+                        padding: "10px",
+                        width: "250px",
+                        height: "330px",
+                        margin: "10px auto",
+                        borderRadius: "5px",
+                        background: "linear-gradient(344deg,rgba(15, 89, 168, 1) 0%, rgba(0, 247, 255, 1) 68%)"
+                    }
+                });
+
+                const searchWrapper = UWA.createElement("div", {
+                    styles: {
+                        position: "relative",
+                        width: "80%",
+                        padding: "8px 0px 8px 0px"
+                        // margin: "0 auto"
+                    }
+                });
+
+                // Input field
+                const searchInput = UWA.createElement("input", {
+                    id: "search-input",
+                    placeholder: "Enter City",
+                    styles: {
+                        borderRadius: "15px",
+                        border: "1px solid #ccc",
+                        width: "100%",
+                        padding: "5px 15px 5px 10px",
+                        outline: "none",
+                        marginLeft: "7%",
+                        transition: "transform 0.3s ease"
+                    },
+                    // events: {
+                    //     mouseenter: function () {
+                    //         this.setStyle("transform", "scale(1.1)")
+                    //     },
+                    //     mouseleave: function () {
+                    //         this.setStyle("transform", "scale(1)")
+                    //     }
+                    // }
+                });
+
+                // Clickable image inside the input
+                const searchIcon = UWA.createElement("img", {
+                    src: "images/search.png", // your image path
+                    alt: "Search",
+                    styles: {
+                        position: "absolute",
+                        left: "100%",
+                        top: "30%",
+                        // bottom:"90%",
+                        // transform: "translateY(-50%)",
+                        // width: "18px",
+                        height: "14px",
+                        cursor: "pointer"
+                    },
+
+                });
+                const errorMessage = UWA.createElement("div", {
+                    id: "error-message",
+                    styles: {
+                        color: "red",
+                        fontSize: "10px",
+                        marginTop: "5px",
+                        textAlign: "center"
+                    }
+                });
+
+                //image section
+                const weather = UWA.createElement("div", {
+                    class: "weather",
+                    styles: {
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }
+                })
+
+                const weatherImage = UWA.createElement("img", {
+                    src: "images/clear.png",
+                    alt: "weather",
+                    class: "weather-icon",
+                    styles: {
+                        height: "90px",
+                        width: "90px",
+                        transition: "transform 0.3s ease"
+                    },
+                    events: {
+                        mouseenter: function () {
+                            this.setStyle("transform", "scale(1.1)")
+                        },
+                        mouseleave: function () {
+                            this.setStyle("transform", "scale(1)")
+                        }
+                    }
+                })
+
+                const temp = UWA.createElement("h1", { class: "temp", html: "100°c", styles: { color: "white", fontSize: "50px", margin: "0px" } })
+                const city = UWA.createElement("h2", { class: "city", html: "Tamilnadu", styles: { color: "white", fontSize: "30px", margin: "0px", padding: "10px", fontWeight: "normal" } })
+
+                const footer = UWA.createElement("div", { class: "footer", styles: { display: "flex", justifyContent: "center", paddingTop: "10px" } })
+
+                //humidity
+                const humidityWrapper = UWA.createElement("div",
+                    {
+                        class: "humidity-wrapper",
+                        styles: {
+                            display: "grid",
+                            gridTemplateColumns: "auto 1fr",
+                            // gridTemplateRows: "auto auto",
+                            // alignItems: "center",
+                            columnGap: "4px",
+                            // rowGap: "2px", 
+                            padding: "10px 10px"
+                        }
+
+                    })
+                const humidityIcon = UWA.createElement("img", {
+                    id: "humidity-icon",
+                    src: "images/humidity.png",
+                    alt: "humidity",
+                    styles: {
+                        height: "35px",
+                        width: "35px",
+                        gridRow: "1/span 2",
+                        gridColumn: "1",
+                    }
+                })
+
+
+                const percent = UWA.createElement("h4", { class: "percent", html: "48%", styles: { color: "white", fontSize: "15px", marginTop: "5px", marginBottom: "5px", gridRow: "1", gridColumn: "2" } })
+                const humidityName = UWA.createElement("h4", { class: "humidity-name", html: "Humidity", styles: { color: "white", margin: "0", fontSize: "10px", gridRow: "2", gridColumn: "2" } })
+
+
+
+                const windWrapper = UWA.createElement("div",
+                    {
+                        class: "wind-wrapper",
+                        styles: {
+                            display: "grid",
+                            gridTemplateColumns: "auto 1fr",
+                            // gridTemplateRows: "auto auto",
+                            // alignItems: "center",
+                            columnGap: "4px",
+                            // rowGap: "2px", 
+                            padding: "10px 10px"
+                        }
+
+                    })
+                const windIcon = UWA.createElement("img", {
+                    id: "wind-icon",
+                    src: "images/wind.png",
+                    alt: "humidity",
+                    styles: {
+                        height: "35px",
+                        width: "35px",
+                        gridRow: "1/span 2",
+                        gridColumn: "1",
+                    }
+                })
+
+
+                const KmHour = UWA.createElement("h4", { class: "KmHour", html: "10Km/h", styles: { color: "white", fontSize: "15px", marginTop: "5px", marginBottom: "5px", gridRow: "1", gridColumn: "2" } })
+                const windSpeed = UWA.createElement("h4", { class: "wind-speed", html: "speed", styles: { color: "white", fontSize: "10px", margin: "0", gridRow: "2", gridColumn: "2" } })
+
+                // Inject 
+                searchWrapper.setContent([searchInput, searchIcon, errorMessage]);
+                weather.setContent([weatherImage, temp, city])
+                humidityWrapper.setContent([humidityIcon, percent, humidityName])
+                windWrapper.setContent([windIcon, KmHour, windSpeed])
+                footer.setContent([humidityWrapper, windWrapper])
+                Main_container.setContent([searchWrapper, weather, footer]);
+                // Main_container.inject(widget.body)
+                // const weatherData = fetch("https://a5f70ada92f744bca9dab72667450ae0.api.mockbin.io/")
+                // weatherData
+                //     .then(res => res.json())
+                //     .then(data => {
+
+                //         searchIcon.addEvent("click", () => {
+                //             const inputValue = searchInput.value.trim().toLowerCase();
+                //             // console.log(data[0].city);
+                //             const matchCity = data.find(item => item.city.toLowerCase() === inputValue)
+
+
+                //             if (matchCity) {
+                //                 errorMessage.setText("");
+                //                 percent.setText(matchCity.humidity)
+                //                 KmHour.setText(matchCity.windSpeed)
+                //                 weatherImage.setAttribute("src", data.weather[0].main);
+                //                 temp.setText(matchCity.temperature + "°c");
+                //                 city.setText(matchCity.city);
+
+                //             }
+
+                //             else {
+                //                 errorMessage.setText("Sorry, no data found for that country.");
+
+                //                 // alert(" Sorry, no data found for that country.")
+                //             }
+                //         })
+
+
+
+
+                //     })
+                const apiKey = "f52a3af9eea67fe6acf99e239b8dc20c"
+                const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q="
+                const a=123;
+                // const inputValue = searchInput.value.trim().toLowerCase();
+               
+                async function checkWeather(inputValue) {
+                    if (!inputValue) {
+                        errorMessage.setText("Please enter a city name.");
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(apiUrl + inputValue + `&appid=${apiKey}`);
+                        console.log(response);
+                        
+                        const data = await response.json();
+                        // if (data.cod === "404") {
+                        //     errorMessage.setText("City not found.");
+                        //     return;
+                        // }
+
+
+                        errorMessage.setText("");
+                        percent.setText(data.main.humidity + "%");
+                        KmHour.setText(data.wind.speed + "km/h");
+                        temp.setText(Math.round(data.main.temp) + "°c");
+                        city.setText(data.name);
+                        weatherImage.setAttribute("src", "images/" + data.weather[0].main.toLowerCase() + ".png");
+
+
+
+                    } catch (err) {
+                        errorMessage.setText(" Sorry, no data found for that city.");
+                        console.error(err);
+                    }
+                }
+
+                searchIcon.addEvent("click", function () {
+                    const inputValue = searchInput.value.trim().toLowerCase();
+                    CustomMask.mask(Main_container);
+
+                    setTimeout(() => {
+                        checkWeather(inputValue);
+                        window.parent.postMessage({
+                            form: "ex1",
+                            text: inputValue
+                        }, "*");
+                        CustomMask.unmask(Main_container)
+                    }, 1000)
+                    searchInput.value = "";
+                    console.log(window.location.origin);
+                    
+                });
+
+
+                return Main_container;
+
+            }
+            return { createWidget }
+        })
+
+
+        
+        widget.onLoad = function () {
+            require(["weather"], function (weather) {
+                const weatherWidget = weather.createWidget();
+                widget.setBody(weatherWidget);
+
+            });
+
+        };
+    </script>
+</body>
+
+</html>

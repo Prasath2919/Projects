@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+
+<head>
+    <title>Title of the App</title>
+    <meta name="author" content="Hari Prasad" />
+    <meta name="description" content="Practice Widget" />
+    <link rel="stylesheet" type="text/css" href="https://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css" />
+    <link rel="stylesheet" href="styles/icon/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
+
+</head>
+
+<body>
+
+    <script>
+        define("CustomMask", [], function () {
+            function mask(targetElement) {
+                try {
+                    if (!(targetElement instanceof HTMLElement)) return;
+
+                    if (targetElement.querySelector(".custom-mask-overlay")) return;
+
+                    const overlay = document.createElement("div");
+                    overlay.className = "custom-mask-overlay";
+
+                    const loaderWrapper = document.createElement("div");
+                    loaderWrapper.className = "custom-loader-wrapper";
+
+                    overlay.appendChild(loaderWrapper);
+
+                    const computedStyle = getComputedStyle(targetElement);
+                    if (computedStyle.position === "static") {
+                        targetElement.style.position = "relative";
+                    }
+
+                    if (targetElement.style.display === "none") {
+                        targetElement.style.display = "block";
+                    }
+
+                    [...targetElement.children].forEach(child => {
+                        if (child !== overlay) {
+                            child.style.opacity = "0.3";
+                            child.style.pointerEvents = "none";
+                        }
+                    });
+
+                    targetElement.appendChild(overlay);
+                } catch (error) {
+                    console.error("Masking failed:", error);
+                }
+            }
+
+            function unmask(targetElement) {
+                try {
+                    if (!(targetElement instanceof HTMLElement)) return;
+
+                    const overlay = targetElement.querySelector(".custom-mask-overlay");
+                    if (overlay) {
+                        overlay.remove();
+                        [...targetElement.children].forEach(child => {
+                            child.style.opacity = "1";
+                            child.style.pointerEvents = "auto";
+                        });
+                    }
+                } catch (error) {
+                    console.error("Unmasking failed:", error);
+                }
+            }
+
+            return {
+                mask,
+                unmask
+            };
+        });
+
+        define("chart", ["CustomMask"], function (CustomMask) {
+            function createChart() {
+
+                const Main_container = UWA.createElement("div", {
+                    id: "main-container",
+                    styles: {
+                        width: "100%",
+                        height: "300px", 
+                        position: "relative"
+                    }
+                });
+
+                const canvasWrapper = UWA.createElement("canvas", {
+                    id: "temp-chart",
+                    styles: {
+                        width: "100%",
+                        height: "100%"
+                    }
+                });
+
+                const errormsg = UWA.createElement("p", { id: "error-msg" })
+                const apiKey = "f52a3af9eea67fe6acf99e239b8dc20c";
+
+                let myChart = null;
+                
+                window.addEventListener("message", function (event) {
+                    if (event.data.form === "ex1") {
+                        const locationdata = event.data.text;
+
+                        // Using AJAX instead of fetch
+                        const xhr = new XMLHttpRequest();
+                        const url = `https://api.openweathermap.org/data/2.5/forecast?q=${locationdata}&units=metric&appid=${apiKey}`;
+                        
+                        xhr.open('GET', url, true);
+                        
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200) {
+                                    try {
+                                        const data = JSON.parse(xhr.responseText);
+                                        // console.log(xhr.responseText);
+                                        
+                                        console.log("data",data);
+                                        
+                                        const labels = data.list.map(item => {
+                                            const [date, time] = item.dt_txt.split(" ");
+                                            return date;
+                                        }); 
+                                        const temps = data.list.map(item => item.main.temp); 
+                                        
+                                        
+                                        CustomMask.mask(Main_container);
+
+                                        
+                                        console.log(window.location.origin);
+                                        
+                                        setTimeout(() => {
+                                            const ctx = document.getElementById('temp-chart').getContext('2d');
+                                            if (myChart) {
+                                                myChart.destroy();
+                                            }
+                                            myChart = new Chart(ctx, {
+                                                type: 'line',
+                                                data: {
+                                                    labels: labels,
+                                                    datasets: [{
+                                                        label: `Temperature in ${locationdata} (°C)`,
+                                                        data: temps,
+                                                        borderColor: 'blue',
+                                                        fill: false,
+                                                    }]
+                                                },
+                                            });
+                                            CustomMask.unmask(Main_container);
+                                        }, 1000);
+                                        
+                                    } catch (parseError) {
+                                        console.error('Error parsing response:', parseError);
+                                        errormsg.textContent = 'Error parsing weather data';
+                                        CustomMask.unmask(Main_container);
+                                    }
+                                } else {
+                                    console.error('HTTP Error:', xhr.status, xhr.statusText);
+                                    errormsg.textContent = `Error fetching weather data: ${xhr.status}`;
+                                    CustomMask.unmask(Main_container);
+                                }
+                            }
+                        };
+                        
+                        xhr.onerror = function() {
+                            console.error('Network error occurred');
+                            errormsg.textContent = 'Network error - please check your connection';
+                            CustomMask.unmask(Main_container);
+                        };
+                        
+                        xhr.send();
+                    }
+                });
+
+                Main_container.setContent([canvasWrapper, errormsg]);
+                return Main_container;
+            }
+            return { createChart }
+        })
+        // widget.onReload=function(){
+        //     widget.dispatchEvent("onLoad");
+        // }
+        widget.onLoad = function () {
+            require(["chart"], function (chart) {
+                const WidgetChart = chart.createChart();
+                widget.setBody(WidgetChart);
+            })
+        }
+        
+
+    </script>
+
+</body>
+
+</html>

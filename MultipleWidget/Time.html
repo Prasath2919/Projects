@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:widget="http://www.netvibes.com/ns/">
+
+<head>
+    <title>Title of the App</title>
+    <meta name="author" content="Hari Prasad" />
+    <meta name="description" content="Practice Widget" />
+    <link rel="stylesheet" type="text/css" href="https://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css" />
+    <!-- <link rel="stylesheet" href="styles/icon/css/all.min.css"> -->
+    <!-- <link rel="stylesheet" href="styles/icon/style.css"> -->
+    <script src="https://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
+</head>
+
+<body>
+
+    <!-- <script data-main="script/require-config" src="lib/require.js"></script> -->
+    <!-- <script  src="script/app.js"></script>
+    <script  src="script/main.js"></script> -->
+    <!-- <script src="lib/require.js"></script> -->
+    <!-- <script src="	https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.7/require.js"></script> -->
+    <script>
+        define("time", [], function () {
+            function createTime() {
+                const Main_container = UWA.createElement("div", {
+                    id: "main-container",
+                    styles: {
+                        // padding: "20px",
+                        width: "240px",
+                        height: "240px",
+                        margin: "10px 0 10px 58px",
+                        borderRadius: "30px",
+                        background: "white",
+                        // border: "1px solid black",
+                        boxShadow: "5px 5px 10px grey"
+                    }
+
+                })
+                const timeWrapper = UWA.createElement("div", {
+                    id: "time-wrapper",
+                    styles: {
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingTop: "50px"
+                    }
+
+                })
+                const time = UWA.createElement("h1", { html: "10:09", styles: { fontSize: "30px", fontWeight: "550", margin: "0", } })
+                const day = UWA.createElement("h1", { html: "Monday", styles: { fontSize: "15px", margin: "0", } })
+                const date = UWA.createElement("h1", { html: "August 29,2025", styles: { fontSize: "20px", margin: "0", } })
+                const temp = UWA.createElement("h1", { html: "Sunny 32°C", styles: { fontSize: "15px", margin: "0", } })
+                const d = new Date();
+                // console.log(d);
+
+
+
+                const apiKey = "f52a3af9eea67fe6acf99e239b8dc20c"
+                const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q="
+                fetch(apiUrl + "chennai" + `&appid=${apiKey}`)
+                    .then(res => (
+                        res.json()
+                    ))
+                    .then(data => {
+                        console.log(data);
+                        // let unix = data.dt;
+                        // const timezone = data.timezone;
+                        // const result = convertTime(unix, timezone);
+                        // const part = result.split(" ");
+                        const result = formatWeatherTime(data.dt, data.timezone);
+                        console.log(result);
+
+
+                    })
+
+
+                function formatWeatherTime(unix, timezone) {
+                    
+                    const utcDate = new Date(unix * 1000);
+
+                    
+                    const options = {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        timeZone: "Asia/Chennai" // <-- use city's timezone instead of adding offset manually
+                    };
+
+                    return utcDate.toLocaleString("en-US", options);
+                }
+
+                
+
+
+                timeWrapper.setContent([time, day, date, temp])
+                Main_container.setContent(timeWrapper)
+                return Main_container;
+            }
+            return { createTime }
+        })
+        widget.onLoad = function () {
+            require(["time"], function (time) {
+                const timeWidget = time.createTime();
+                widget.setBody(timeWidget)
+            })
+        }
+
+    </script>
+
+</body>
+
+</html>
