@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>SingUp Page</title>
+</head>
+
+<body>
+    
+
+    <div class="regForm">
+        <div class="signup-input">
+            <h1>Create Account</h1>
+        </div>
+        <div class="check-acc">
+            <h1>Are you already have an account ? <a href="login.html">Login</a></h1>
+        </div>
+        <form id="signupForm">
+             <div class="input">
+                <label class="textlabel" for="fullname"><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" name="fullname" id="fullname" placeholder="Fullname">
+                <span class="error" id="fullnameerror"></span>
+            </div>
+            <div class="input">
+                <label class="textlabel" for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" name="email" id="email" placeholder="Email">
+                <span class="error" id="emailError"></span>
+            </div>
+            <div class="input">
+                <label class="textlabel" for="pwd"><i class="fas fa-lock"></i> Create Password</label>
+                <input type="password" name="pwd" id="pwd" placeholder="Create Password">
+                <span class="error" id="pwdError"></span>
+            </div>
+            <div class="input">
+                <label class="textlabel" for="mobileNum"><i class="fas fa-phone"></i> Mobile Number</label>
+                <input type="text" name="mobileNum" id="mobilenum" placeholder="Mobile Number">
+                <span class="error" id="numError"></span>
+            </div>
+           
+            <div class="input">
+                <label class="textlabel" for="address"><i class="fas fa-address-card"></i> Address</label>
+                <input type="text" name="address" id="address" placeholder="Address">
+                <span class="error" id="addressError"></span>
+            </div>
+
+
+            <div class="btn">
+                <button type="submit">SignUp</button>
+            </div>
+        </form>
+    </div>
+    <script src="signup.js"></script>
+</body>
+
+</html>

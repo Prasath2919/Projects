@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login_style.css">
+    <title>Login Page</title>
+</head>
+<body>
+    <div class="regForm">
+        <div class="login-input"><h1>Login</h1></div>
+        <div class="check-acc"><h1>Don't have an account ? <a href="index.html">Register</a></h1></div>
+
+        <form action="" id="loginForm">
+            
+            <div class="input">
+                <label class="textlabel" for="email"><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" name="email" id="email"placeholder="Enter your Email" >
+                <small class="error" id="emailError"></small>
+
+            </div>
+            <div class="input">
+                <label class="textlabel" for="pwd"> <i class="fas fa-lock"></i> Password</label>
+                <input type="password" name="pwd" id="pwd" placeholder="Enter your Password" >
+                <small class="error" id="pwdError"></small>
+            </div>
+            
+           
+            <div class="btn">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+    <script src="login.js"></script>
+</body>
+
+</html>
